@@ -2,3 +2,5 @@ nose
 sphinx
 django
 click
+boto
+boto3
