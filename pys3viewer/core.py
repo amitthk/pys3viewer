@@ -11,7 +11,5 @@ def build_user_session(username, secret_access_key):
     return rtrnstr;
 
 
-def get_all_files_in_bucket():
-    """Fetch all the files for bucket..."""
-    username = input('Enter username:');
-    print(build_user_session(username, ''));
+def get_all_files_in_bucket(username, access_key):
+    return build_user_session(username, access_key);
