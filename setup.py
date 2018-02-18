@@ -14,6 +14,7 @@ setup(
     include_package_data=True,
     scripts=["manage.py"],
     install_requires=["Django>=1.9,<2.0",
+                      "Click>=6.0",
                       "django-cors-headers>=1.1.0",
                       "djangorestframework>=3.3.1",
                       "MySQL-python>=1.2.5",
