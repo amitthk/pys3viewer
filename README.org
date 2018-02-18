@@ -7,19 +7,19 @@ This project is a module for analyzing files from s3 bucket.
 
 Directories:
 
-\docs  -> contains documentation generated via sphinx
-\tests -> contains tests
-\venv  -> virtual environment
-\pys3viewer\*  -> The actual module for analyzing s3 data
-\pys3viewercli  -> Command line tool to run the module
-\pys3viewerapi   -> django rest api for the module
-\pys3viewerui   -> Angular4 frontend for pys3viewer
-\jenkins   -> helper groovy wrappers for jenkins pipeline as code
-\ansible  -> Ansible playbooks for continuous delivery
+| \docs          | contains documentation generated via sphinx         |
+| \tests         | contains tests                                      |
+| \venv          | virtual environment                                 |
+| \pys3viewer\*  | The actual module for analyzing s3 data             |
+| \pys3viewercli | Command line tool to run the module                 |
+| \pys3viewerapi | django rest api for the module                      |
+| \pys3viewerui  | Angular4 frontend for pys3viewer                    |
+| \jenkins       | helper groovy wrappers for jenkins pipeline as code |
+| \ansible       | Ansible playbooks for continuous delivery           |
 
 Files:
-Makefile -> Make commands
-Jenkinsfile -> Continuous delivery pipelines
+| Makefile    | Make commands                 |
+| Jenkinsfile | Continuous delivery pipelines |
 
 
 ** Tools used
@@ -32,7 +32,7 @@ Jenkinsfile -> Continuous delivery pipelines
 
 In Consideration:
 
-| s3star    | Amazon log file analyzer |
+| s3stat    | Amazon log file analyzer |
 | GoAccess  | real time viewing of server logs in different formats |
 
 
