@@ -24,16 +24,20 @@ Files:
 
 ** Tools used
 
-| Sphinx    | Documentation            |
-| Django    | REST api                 |
-| Angular 4 | Front End                |
-| Click     | Command line parser      |
-| Boto3     | For interfacing with AWS |
+| Sphinx              | Documentation            |
+| Django              | Django api               |
+| Angular 4           | Front End                |
+| Click               | Command line parser      |
+| Boto3               | For interfacing with AWS |
+| Pylint              | Linting and code quality |
+| Pytest              | Testing                  |
+| djangorestframework | django rest api          |
+| django-rest-swagger | REST API Documentation   |
 
 In Consideration:
 
-| s3stat    | Amazon log file analyzer |
-| GoAccess  | real time viewing of server logs in different formats |
+| s3stat              | Amazon log file analyzer                              |
+| goaccess            | real time viewing of server logs in different formats |
 
 
 ** How to install
