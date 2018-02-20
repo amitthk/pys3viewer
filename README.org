@@ -31,14 +31,17 @@ Files:
 | Boto3               | For interfacing with AWS |
 | Pylint              | Linting and code quality |
 | Pytest              | Testing                  |
-| djangorestframework | django rest api          |
-| django-rest-swagger | REST API Documentation   |
+
 
 In Consideration:
 
 | s3stat              | Amazon log file analyzer                              |
 | goaccess            | real time viewing of server logs in different formats |
-
+| djangorestframework | django rest api                                       |
+| django-rest-swagger | REST API Documentation                                |
+| aws cognito         | Authentication against external identity providers    |
+| aws emr/hadoop      | Map reduce to speed up indexing                       |
+| mrjob               | to interface with elastic map reduce                  |
 
 ** How to install
 
