@@ -1,1 +1,4 @@
-from .core import get_all_files_in_bucket
+import os
+import sys
+
+sys.path.append(os.path.realpath(os.getcwd()))

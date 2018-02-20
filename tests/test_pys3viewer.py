@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+from pys3viewercli.CommandLineHelper import CommandLineHelper
 
-from .context import pys3viewer
 from django import VERSION
 
 
@@ -17,14 +17,16 @@ class AdvancedTestSuite(unittest.TestCase):
         pass
 
     def test_buckets_for_a_user(self):
-        username = input('Enter username:');
-        access_key = input('Enter access key:');
-        result = pys3viewer.get_all_files_in_bucket(username, access_key)
+        access_key_id = input('Enter access_key_id:');
+        secret_access_key = input('Enter secret_access_key:');
+        command_line_helper = CommandLineHelper()
+        result = command_line_helper.build_user_session(access_key_id, secret_access_key)
         print(result);
         self.assertIsNotNone(result)
 
     def tearDown(self):
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
