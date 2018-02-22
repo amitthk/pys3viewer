@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 node {
 currentBuild.result = "SUCCESS"
   try{
-   def mvnHome;
+   def pythonHome;
    def project_id;
    def artifact_id;
    def aws_s3_bucket_name;
@@ -16,7 +16,7 @@ currentBuild.result = "SUCCESS"
    
    stage('Initalize'){
    //Get these from parameters later
-       mvnHome = tool 'Maven3.5.0'
+       pythonHome = tool 'python-3.6.4'
 	   project_id = 'job-dispatcher-api';
 	   aws_s3_bucket_name = 'jvcdp-repo';
 	   aws_s3_bucket_region = 'ap-southeast-1';
@@ -27,14 +27,66 @@ currentBuild.result = "SUCCESS"
 	   deploy_userid='ec2-user';
 //	   artifact_id = version();
    }
+   
+   def installed = fileExists 'bin/activate'
+
+    if (!installed) {
+        stage("Install Python Virtual Enviroment") {
+            sh 'virtualenv --no-site-packages .'
+        }
+    }   
+
+   
    stage('Checkout') { // for display purposes
       // Get latest code from a GitHub repository
       checkout scm;
    }
+   
+   stage ("Install Application Dependencies") {
+        sh '''
+            source bin/activate
+            pip install -r <relative path to requirements file>
+            deactivate
+           '''
+    }
+
+   
    stage('Code Analysis'){
-       //sh "'${mvnHome}/bin/mvn' clean jacoco:prepare-agent package jacoco:report"
+
        echo 'perform code analysis here!'
    }
+   
+   
+       stage ("Collect Static files") {
+        sh '''
+            source bin/activate
+            python <relative path to manage.py> collectstatic --noinput
+            deactivate
+           '''
+    }
+
+	stage ("Run Unit/Integration Tests") {
+        def testsError = null
+        try {
+            sh '''
+                source ../bin/activate
+                python <relative path to manage.py> jenkins
+                deactivate
+               '''
+        }
+        catch(err) {
+            testsError = err
+            currentBuild.result = 'FAILURE'
+        }
+        finally {
+            junit 'reports/junit.xml'
+
+            if (testsError) {
+                throw testsError
+            }
+        }
+    }
+
   stage('Build'){
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
@@ -69,21 +121,21 @@ currentBuild.result = "SUCCESS"
   }
    stage('Stash')
    {
-      stash includes: 'target/*.war', name: 'target'
+      stash includes: 'dist/*.tar.gz', name: 'dist'
    }
 
 /*    stage('Send Build to S3')
     {
-    unstash 'target';
+    unstash 'dist';
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
     credentialsId: 's3mavenadmin', 
     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])  
 	 {
         awsIdentity() //show us what aws identity is being used
-        def targetLocation = project_id + '/builds/' + timeStamp;
+        def distLocation = project_id + '/builds/' + timeStamp;
         withAWS(region: aws_s3_bucket_region) {
-        s3Upload(file: 'target', bucket: aws_s3_bucket_name, path: targetLocation)
+        s3Upload(file: 'dist', bucket: aws_s3_bucket_name, path: distLocation)
         }
      }
     }
@@ -131,8 +183,8 @@ def version() {
 }
 
 def mvn(args) {
-    _mvnHome = tool 'Maven3.5.0'
-    sh "${_mvnHome}/bin/mvn ${args}"
+    _pythonHome = tool 'python-3.6.4'
+    sh "${_pythonHome}/bin/mvn ${args}"
 }
 
 def runTests(duration) {
