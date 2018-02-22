@@ -3,7 +3,9 @@ from pys3viewer.Hadoop import HadoopProvider
 
 
 class MapReduceProvider(object):
-    # Create provider based on class name:
+    """
+    Factory Class - reates provider based on class name:
+    """
     def factory(type):
         if type == "EMRProvider": return EMRProvider()
         if type == "HadoopProvider": return HadoopProvider()

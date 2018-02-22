@@ -1,4 +1,3 @@
-import datetime
 
 class BucketInfo:
     """Model class for bucket information"""

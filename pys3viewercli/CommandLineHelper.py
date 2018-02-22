@@ -9,7 +9,17 @@ class CommandLineHelper:
 
     @staticmethod
     def list_all_files_in_all_buckets_for_user(access_key_id, secret_access_key):
-        """Instance method used to set credentials and list s3 bucket details using pys3viewer module."""
+        """
+        Instance method used to set credentials and list all the s3 buckets and its files accessible by a user
+
+        Args:
+            access_key_id: AWS access_key_id used to access the s3 buckets for a user
+            secret_access_key: AWS secret_access_key used to access the s3 bucket for user
+
+        Returns:
+            String value representing the tree format structure of all the s3 buckets accessible by user
+
+        """
         return_string = ''
         user_credentials = CredentialManager(access_key_id, secret_access_key)
         bucket_manager = BucketManager(user_credentials)
@@ -22,7 +32,16 @@ class CommandLineHelper:
 
     @staticmethod
     def list_bucket_info_for_user(access_key_id, secret_access_key):
-        """Instance method used to set credentials and list s3 bucket details using pys3viewer module."""
+        """
+        Instance method used to set credentials and list all the s3 buckets and its files accessible by a user
+
+        Args:
+            access_key_id: AWS access_key_id used to access the s3 buckets for a user
+            secret_access_key: AWS secret_access_key used to access the s3 bucket for user
+
+        Returns:
+            String value representing each s3 bucket and corresponding details for each bucket
+        """
         return_string = ''
         user_credentials = CredentialManager(access_key_id, secret_access_key)
         bucket_manager = BucketManager(user_credentials)

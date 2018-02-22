@@ -46,7 +46,13 @@ class BucketManager:
         return bucket_info
 
     def get_files_in_bucket(self, bucket_name):
-        """All the files a bucket."""
+        """Returns he list of objects within a bucket.
+
+        Args:
+            bucket_name: name of bucket
+        Returns:
+            list of all objects within bucket
+        """
         s3 = self.credentials.session.resource('s3')
         this_bucket = s3.Bucket(bucket_name)
         list_of_files = [s3file.key for s3file in this_bucket.objects.all()];
