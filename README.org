@@ -12,7 +12,7 @@ Directories:
 | \venv          | virtual environment                                 |
 | \pys3viewer\*  | The actual module for analyzing s3 data             |
 | \pys3viewercli | Command line tool to run the module                 |
-| \pys3viewerapi | django rest api for the module                      |
+| \pys3viewerapi | flask rest api for the module                 |
 | \pys3viewerui  | Angular4 frontend for pys3viewer                    |
 | \jenkins       | helper groovy wrappers for jenkins pipeline as code |
 | \ansible       | Ansible playbooks for continuous delivery           |
@@ -24,24 +24,23 @@ Files:
 
 ** Tools used
 
-| Sphinx              | Documentation            |
-| Django              | Django api               |
-| Angular 4           | Front End                |
-| Click               | Command line parser      |
-| Boto3               | For interfacing with AWS |
-| Pylint              | Linting and code quality |
-| Pytest              | Testing                  |
+| Click     | Command line parser             |
+| Sphinx    | Documentation                   |
+| Flask     | Flask and flask_restful for api |
+| Angular 4 | Front End                       |
+| Boto3     | For interfacing with AWS        |
+| Pylint    | Linting and code quality        |
+| Pytest    | Testing                         |
 
 
 In Consideration:
 
 | s3stat              | Amazon log file analyzer                              |
 | goaccess            | real time viewing of server logs in different formats |
-| djangorestframework | django rest api                                       |
-| django-rest-swagger | REST API Documentation                                |
 | aws cognito         | Authentication against external identity providers    |
 | aws emr/hadoop      | Map reduce to speed up indexing                       |
 | mrjob               | to interface with elastic map reduce                  |
+
 
 ** How to install
 
