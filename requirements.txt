@@ -4,3 +4,5 @@ django
 click
 boto
 boto3
+flask
+flask_restful

@@ -30,5 +30,10 @@ class CommandLineHelper:
         for bucket_name in buckets_for_user:
             return_string += '\n + ' + bucket_name
             bucket_info = bucket_manager.get_bucket_statistics(bucket_name)
-            return_string += '\n -> ' + str(bucket_info)
+            format_string = "\n   -> bucket_name : {0}, \n   -> creation_date : {1},"\
+                            "\n   -> number_of_files : {2}, \n   -> total_size_of_files : {3},"\
+                            "\n   -> last_modified : {4}"
+            return_string += format_string.format(bucket_info.bucket_name, bucket_info.creation_date,
+                                                  bucket_info.number_of_files, bucket_info.total_size_of_files, bucket_info.last_modified)
+
         return return_string
