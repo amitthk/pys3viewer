@@ -5,9 +5,11 @@ import json
 from pys3viewer.CredentialManager import CredentialManager
 from pys3viewer.BucketManager import BucketManager
 from pys3viewerapi.validator import validate
+from flask.ext.cors import CORS
 
 app = Flask(__name__)
 app.config['BUNDLE_ERRORS'] = True
+cors = CORS(app)
 api = Api(app)
 
 

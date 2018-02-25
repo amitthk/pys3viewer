@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+  title = 'pys3viewer';
+
+  showsidebar = false;
+
+  onSidebarToggle(showsidebar: boolean){
+    this.showsidebar=showsidebar;
+  }
 }

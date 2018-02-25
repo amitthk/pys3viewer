@@ -14,7 +14,7 @@
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
-      "test": "test.ts",
+      "test": "test.ts",  
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "styles": [
@@ -23,7 +23,10 @@
       "scripts": [],
       "environments": {
         "source": "environments/environment.ts",
-        "dev": "environments/environment.ts",
+        "local": "environments/environment.local.ts",
+        "dev": "environments/environment.dev.ts",
+        "sit": "environments/environment.sit.ts",
+        "uat": "environments/environment.uat.ts",
         "prod": "environments/environment.prod.ts"
       }
     }
