@@ -1,6 +1,6 @@
 import click
-from pys3viewercli.Spinner import Spinner
-from pys3viewercli.CommandLineHelper import CommandLineHelper
+from pys3viewercli import Spinner
+from pys3viewercli import CommandLineHelper
 
 
 @click.command()
@@ -19,7 +19,7 @@ def main(access_key_id, secret_access_key, tree):
     Returns:
         Command line output of the files and directory structure from all S3 buckets.
     """
-    command_line_helper = CommandLineHelper()
+    command_line_helper = CommandLineHelper.CommandLineHelper()
     # spinner = Spinner()
     # spinner.start()
     if tree is 'Y':
