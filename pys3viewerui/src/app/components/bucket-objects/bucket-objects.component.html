@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
 
-      <h1>Bucket Summary Listing </h1>
+      <h1>Bucket Object Details</h1>
       <form class="form-horizontal">
         <div class="form-group"><label for="inputContents" class="col-sm-3 control-label">access_key_id</label>
           <div class="col-sm-7"><input type="text" class="form-control" name="access_key_id" [(ngModel)]="loginModel.access_key_id" id="loginModel.access_key_id"
@@ -41,45 +41,20 @@
     <div class="col-sm-12" *ngIf="isSuccess">
       <div class="table-responsive">
         <table class="table table-bordered">
-          <thead>
-            <tr>
-              <td>
-                Bucket Name
-              </td>
-              <td>
-                Creation Date
-              </td>
-              <td>
-                Last Modified
-              </td>
-              <td>
-                Number of Files
-              </td>
-              <td>
-                Total Size of Files
-              </td>
-            </tr>
-          </thead>
           <tbody>
             <tr *ngFor="let resp of result">
               <td>
                 {{resp.bucket_name}}
               </td>
               <td>
-                {{resp.creation_date}}
-              </td>
-              <td>
-                {{resp.last_modified}}
-              </td>
-              <td>
-                {{resp.number_of_files}}
-              </td>
-              <td>
-                {{resp.total_size_of_files}}
+                <ul class="list-group">
+                  <li class="list-group-item" *ngFor="let file_path of resp.file_paths">{{file_path}}</li>
+                </ul>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+    <div class="col-sm-12 text-danger" *ngIf="isError">{{ result | json }}</div>
   </div>

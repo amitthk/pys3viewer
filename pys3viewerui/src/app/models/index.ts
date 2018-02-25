@@ -1,2 +1,2 @@
 export * from './LoginModel';
-export * from './S3BucketInfoModel';
+export * from './S3BucketModels';

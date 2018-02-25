@@ -9,6 +9,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { PageFooterComponent } from './components/page-footer/page-footer.component';
 import { PageSidebarComponent } from './components/page-sidebar/page-sidebar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { BucketObjectsComponent } from './components/bucket-objects/bucket-objects.component';
 
 import { MapIteratorPipe } from './utility/map-iterator.pipe';
 
@@ -24,7 +25,8 @@ import { AppRoutingModule } from './app-routing.module';
     PageFooterComponent,
     PageSidebarComponent,
     DashboardComponent,
-    MapIteratorPipe
+    MapIteratorPipe,
+    BucketObjectsComponent
   ],
   imports: [
     BrowserModule,

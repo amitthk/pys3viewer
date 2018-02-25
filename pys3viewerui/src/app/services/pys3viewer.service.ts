@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import { Observable } from 'rxjs/Rx';
 import { AppSettings } from '../../app/app.settings';
-import { LoginModel } from '../models/index';
+import { LoginModel, BucketInfoModel, BucketDetailsModel } from '../models/index';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -19,14 +19,14 @@ export class Pys3viewerService implements OnInit {
   }
 
 
-  postS3bucketRequest(loginInfo: LoginModel): Observable<any>{
+  postS3bucketRequest(loginInfo: LoginModel): Observable<BucketInfoModel[]>{
           this.apiUrl = 'http://localhost:8081/';  
-    return this.http.post(this.apiUrl+'buckets', loginInfo, this.getOptions()).map((response: Response)=>{response.json().data});
+    return this.http.post(this.apiUrl+'buckets', loginInfo, this.getOptions()).map((response: Response)=>response.json());
   }
 
-  postS3bucketObjectRequest(loginInfo: LoginModel): Observable<any>{
+  postS3bucketObjectRequest(loginInfo: LoginModel): Observable<BucketDetailsModel[]>{
           this.apiUrl = 'http://localhost:8081/';    
-    return this.http.post(this.apiUrl+'bucketobjects', loginInfo, this.getOptions()).map((response: Response)=>{response.json().data});
+    return this.http.post(this.apiUrl+'bucketobjects', loginInfo, this.getOptions()).map((response: Response)=>response.json());
   }
 
     private getOptions(): RequestOptions {

@@ -306,3 +306,16 @@ div.rounded-corner-widget{
 	.v-margin-small { margin: 20px 0;}	
   	.v-margin-normal { margin: 25px 0;}
 }
+
+.dropdown-toggle .icon-bars-button{
+  display: inline-block;
+  vertical-align:middle;
+}
+.dropdown-toggle .icon-bar {
+  margin-bottom:2px;
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}

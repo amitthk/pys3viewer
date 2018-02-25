@@ -5,6 +5,7 @@ import json
 from pys3viewer.CredentialManager import CredentialManager
 from pys3viewer.BucketManager import BucketManager
 from pys3viewerapi.validator import validate
+from pys3viewerapi.BucketDetailsModel import BucketDetailsModel
 from flask.ext.cors import CORS
 
 app = Flask(__name__)
@@ -38,7 +39,8 @@ class BucketList(Resource):
                     {'error': 'Validation error. The data supplied is null or request is not in json format.'}]}
                 return error_result
             else:
-                result = self.handle_bucket_request(access_key_id, secret_access_key)
+                bucket_list = self.handle_bucket_request(access_key_id, secret_access_key)
+                result = [b.serialize() for b in bucket_list]
                 return jsonify(result)
         except Exception as e:
             error_result = {'data': [{'error': str(e)}]}
@@ -48,12 +50,11 @@ class BucketList(Resource):
         user_credentials = CredentialManager(access_key_id, secret_access_key)
         bucket_manager = BucketManager(user_credentials)
         buckets_for_user = bucket_manager.get_buckets_for_user()
-        bucket_dictionary = {}
+        bucket_list = list()
         for bucket_name in buckets_for_user:
-            bucket_info = [str(bucket_manager.get_bucket_statistics(bucket_name))]
-            bucket_dictionary.update({bucket_name: bucket_info})
-        result = {'data': [bucket_dictionary]}
-        return result
+            bucket_info = bucket_manager.get_bucket_statistics(bucket_name)
+            bucket_list.append(bucket_info)
+        return bucket_list
 
 class BucketObjects(Resource):
     """
@@ -78,7 +79,8 @@ class BucketObjects(Resource):
                 error_result = {'data': [{'error': 'Validation error. The data supplied is null or request is not in json format.'}]}
                 return jsonify(error_result)
             else:
-                result = self.handle_bucket_objects_request(access_key_id, secret_access_key)
+                bucket_list = self.handle_bucket_objects_request(access_key_id, secret_access_key)
+                result = [b.serialize() for b in bucket_list]
                 return jsonify(result)
         except Exception as e:
             error_result = {
@@ -89,12 +91,12 @@ class BucketObjects(Resource):
         user_credentials = CredentialManager(access_key_id, secret_access_key)
         bucket_manager = BucketManager(user_credentials)
         buckets_for_user = bucket_manager.get_buckets_for_user()
-        bucket_dictionary = {}
+        bucket_list = list()
         for bucket_name in buckets_for_user:
-            bucket_objects = [json.dumps(bucket_manager.get_files_in_bucket(bucket_name))]
-            bucket_dictionary.update({bucket_name: bucket_objects})
-        result = {'data': [bucket_dictionary]}
-        return result
+            bucket_object = BucketDetailsModel(bucket_name)
+            bucket_object.file_paths = [str(f) for f in bucket_manager.get_files_in_bucket(bucket_name)]
+            bucket_list.append(bucket_object)
+        return bucket_list
 
 
 api.add_resource(BucketList, '/buckets')
