@@ -17,12 +17,12 @@ currentBuild.result = "SUCCESS"
    stage('Initalize'){
    //Get these from parameters later
        pythonHome = tool 'python-3.6.4'
-	   project_id = 'job-dispatcher-api';
+	   project_id = 'pys3viewer';
 	   aws_s3_bucket_name = 'jvcdp-repo';
 	   aws_s3_bucket_region = 'ap-southeast-1';
 	   timeStamp = getTimeStamp();
        baseDir = pwd();
-	   currentBranch = env.BRANCH_NAME;
+	   currentBranch = getCurrentBranch();
 	   deploy_env=getTargetEnv(currentBranch);
 	   deploy_userid='ec2-user';
 //	   artifact_id = version();
@@ -41,7 +41,45 @@ currentBuild.result = "SUCCESS"
       // Get latest code from a GitHub repository
       checkout scm;
    }
-   
+
+   stage('Get UI Dependencies'){
+		sh '''
+		    cd pys3viewerui
+		    rm -rf dist
+		    rm -rf dist.tar.gz
+		    rm -rf rm -rf release/*.tar.gz
+		    npm install
+		    '''
+   }
+   stage('Build UI'){
+		sh '''
+		    cd pys3viewerui
+		    npm run ng build --prod -- --environment=${deploy_env} --max-old-space-size=200
+		    '''
+   }
+   stage('Archive') {
+       sh '''
+       cd pys3viewerui
+       mkdir -p release
+       cd dist
+       tar -czvf ../release/${project_id}ui-${timeStamp}.tar.gz .
+       cd ..
+       '''
+       stash includes: 'release/*.tar.gz', name: "${project_id}_ui"
+       stash includes: 'dist/**/*', name: "${project_id}_ui_dist"
+   }
+	withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-deployuser', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])
+	 {
+		stage('Publish to S3'){
+		unstash 's3mavenadmin'
+		awsIdentity() //show us what aws identity is being used
+		def targetLocation = project_id + '/' + timeStamp;
+		withAWS(region: aws_s3_bucket_region) {
+		s3Upload(file: 'release', bucket: aws_s3_bucket_name, path: targetLocation)
+		}
+		}
+	}
+
    stage ("Install Application Dependencies") {
         sh '''
             source bin/activate
@@ -258,4 +296,11 @@ def runWithServer(body) {
     } finally {
         undeploy id
     }
+}
+
+def getCurrentBranch () {
+    return sh (
+        script: 'git rev-parse --abbrev-ref HEAD',
+        returnStdout: true
+    ).trim()
 }

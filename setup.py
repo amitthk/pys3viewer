@@ -14,14 +14,16 @@ setup(
     include_package_data=True,
     install_requires=["Flask>=0.12",
                       "Click>=6.0",
-                      "BrokenPackage>=0.7,<=1.0"],
+                      "BrokenPackage>=0.7,<=1.0",
+                      "flask_restful",
+                      "flask-cors",
+                      "boto3"],
     extras_require={
         "test": [
             "colorama>=0.3.3",
             "coverage>=4.0.3",
-            "django-nose>=1.4.2",
             "nose>=1.3.7",
-            "pinocchio>=0.4.2"
+            "sphinx"
         ]
     }
 )
