@@ -1,0 +1,18 @@
+WSGIPythonHome "/usr/local/bin/python3.6"
+WSGIPythonPath "{{api_context_root}}/pys3venv/lib/python3.6/site-packages"
+
+<VirtualHost *:80>
+    DocumentRoot {{ui_context_root}}
+    ServerName {{server_host_name}}
+
+    Alias /{{ui_app_name}}/ "{{ui_context_root}}/"
+    WSGIScriptAlias / "{{api_context_root}}/wsgi.py"
+
+    <Directory {{ui_context_root}}>
+        Options FollowSymLinks
+        AllowOverride All
+        order allow,deny
+        allow from all
+    </Directory>
+
+</VirtualHost>

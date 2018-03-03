@@ -1,19 +1,19 @@
 import os
 import sys
-from logging import Formatter, FileHandler
 
-APP_HOME = r"/var/www/pys3viewer"
-
-
-activate_this = os.path.join("/var/www/pys3viewer/venv/flask/bin/activate_this.py")
+##Virtualenv Settings
+app_home = '/var/www/pys3viewerapi'
+activate_this = app_home + '/pys3venv/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
-sys.path.insert(0, APP_HOME)
-os.chdir(APP_HOME)
+##Replace the standard out
+sys.stdout = sys.stderr
 
-from pys3viewerapi.main import app
+##Add this file path to sys.path in order to import settings
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '../..'))
 
-handler = FileHandler("app.log")
-handler.setFormatter(Formatter("[%(asctime)s | %(levelname)s] %(message)s"))
-app.logger.addHandler(handler)
-application = app
+##Add this file path to sys.path in order to import app
+sys.path.append('/var/www/pys3viewerapi/')
+
+##Create appilcation for our app
+from pys3viewerapi.main import app as application

@@ -113,8 +113,6 @@ currentBuild.result = "SUCCESS"
 	   ~/.localpython/bin/python setup.py install
 	   python -m virtualenv ve -p $HOME/.localpython/bin/python3.6
 	   source ve/bin/activate
-	   pip install "pywinrm>=0.2.2"
-	   pip install ansible
 	   
 	
 	"""
@@ -170,34 +168,6 @@ def getTimeStamp(){
 	def date = new Date()
 	return dateFormat.format(date);
 }
-
-def version() {
-    def ver = readFile('pom.xml') =~ '<version>(.+)</version>'
-    ver ? ver[0][1] : null
-    def art = readFile('pom.xml') =~ '<artifactId>(.+)</artifactId>'
-    art ? art[0][1] : null
-    def pck = readFile('pom.xml') =~ '<packaging>(.+)</packaging>'
-    pck ? pck[0][1] : null
-	version = art+ver ? art + '-' + ver + '.' + pck : artifactId + '.war'
-	return version;
-}
-
-def mvn(args) {
-    _pythonHome = tool 'python-3.6.4'
-    sh "${_pythonHome}/bin/mvn ${args}"
-}
-
-def runTests(duration) {
-    node {
-        checkout scm
-        runWithServer {url ->
-            mvn "-o -f sometests test -Durl=${url} -Dduration=${duration}"
-        }
-    }
-}
-
-
-
 
 def getTargetEnv(String branchName){
 	def deploy_env="dev";
@@ -268,7 +238,7 @@ def run_playbook(playbook_name, deploy_env, String deploy_userid, String project
 		
 		def package_base_dir =  (pwd()+"/target/").toString();
 		def extras_params = "-v -e deploy_host=${deploy_env} -e remote_user=${deploy_userid} -e package_base_dir=${package_base_dir}".toString();
-		def playbook_to_run = "${playbook_name}".toString();
+		def playbook_to_run = ("ansible/" + playbook_name).toString();
 		withEnv(['ANSIBLE_HOST_KEY_CHECKING=False']){
 		ansiblePlaybook( 
 		credentialsId: 'deployadmin',
