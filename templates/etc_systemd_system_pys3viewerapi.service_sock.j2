@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve {{api_service_name}}
+After=network.target
+
+[Service]
+User=apache
+Group=apache
+WorkingDirectory={{api_context_root}}
+Environment="PATH={{api_context_root}}/pys3venv/bin"
+ExecStart={{api_context_root}}/pys3venv/bin/gunicorn --workers 3 --access-logfile {{api_context_root}}/gunicorn-access.log --error-logfile {{api_context_root}}/gunicorn-error.log  --bind unix:{{api_context_root}}/{{api_service_name}}.sock -m 007 {{api_service_name}}.main:app
+
+[Install]
+WantedBy=multi-user.target

@@ -5,6 +5,9 @@ from .SimpleMapReduce import SimpleMapReduce
 
 
 class BucketManager:
+    """
+    Bucket Manager
+    """
     def __init__(self, user_credentials: CredentialManager):
         self.credentials = user_credentials
 
@@ -47,8 +50,6 @@ class BucketManager:
 
         return bucket_info
 
-<<<<<<< Updated upstream
-=======
     def get_bucket_statistics_v2(self, bucket_name, storageTypeFilter=None):
         """
         Fetches the bucket information
@@ -88,8 +89,6 @@ class BucketManager:
         for item in page_iterator['Contents']:
             yield item
 
-
->>>>>>> Stashed changes
     def get_files_in_bucket(self, bucket_name):
         """Returns he list of objects within a bucket.
 
