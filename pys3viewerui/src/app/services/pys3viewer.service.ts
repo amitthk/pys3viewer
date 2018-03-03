@@ -12,20 +12,19 @@ import { environment } from '../../environments/environment';
 export class Pys3viewerService implements OnInit {
   private apiUrl:String;
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    this.apiUrl=  AppSettings.envEndpoints.get(environment.env) ;
+  }
+
   ngOnInit(){
-        //this.apiUrl=  (environment.env=='local') ?  AppSettings.API_ENDPOINT : AppSettings.API_ENDPOINT+'api/';
 
   }
 
-
   postS3bucketRequest(loginInfo: LoginModel): Observable<BucketInfoModel[]>{
-          this.apiUrl = 'http://localhost:8081/';  
     return this.http.post(this.apiUrl+'buckets', loginInfo, this.getOptions()).map((response: Response)=>response.json());
   }
 
   postS3bucketObjectRequest(loginInfo: LoginModel): Observable<BucketDetailsModel[]>{
-          this.apiUrl = 'http://localhost:8081/';    
     return this.http.post(this.apiUrl+'bucketobjects', loginInfo, this.getOptions()).map((response: Response)=>response.json());
   }
 

@@ -2,33 +2,21 @@
     DocumentRoot {{ui_context_root}}
     ServerName localhost
 
-    ProxyPreserveHost On
+ProxyPreserveHost On
 
 
-    Alias /{{ui_app_name}}/ "{{ui_context_root}}/"
+Alias /{{ui_app_name}}/ "{{ui_context_root}}/"
 
-    <Directory {{ui_context_root}}>
-        Options FollowSymLinks
-        AllowOverride All
-        order allow,deny
-        allow from all
-    </Directory>
-
-    #ProxyPass        "/pys3viewerapi/" "unix:{{api_context_root}}/{{api_service_name}}.sock|pys3viewerapi://localhost/pys3viewerapi/"
-    ProxyPass /pys3viewerapi/ http://127.0.0.1:8081/
-    ProxyPassReverse /pys3viewerapi/ http://127.0.0.1:8081/
+<Directory {{ui_context_root}}>
+    Options FollowSymLinks
+    AllowOverride All
+    order allow,deny
+    allow from all
+</Directory>
 
 
-    #WSGIDaemonProcess {{api_service_name}} user=apache group=apache
-    #WSGIScriptAlias /{{api_service_name}}/ {{api_context_root}}/site.wsgi
+ProxyPass /{{api_service_name}}/ http://127.0.0.1:8081/
+ProxyPassReverse /{{api_service_name}}/ http://127.0.0.1:8081/
 
-    #<Directory {{api_context_root}}>
-    #    WSGIProcessGroup {{api_service_name}}
-    #    WSGIApplicationGroup %{GLOBAL}
-    #    Options FollowSymLinks
-    #    AllowOverride All
-    #    order allow,deny
-    #    allow from all
-    #</Directory>
 
 </VirtualHost>

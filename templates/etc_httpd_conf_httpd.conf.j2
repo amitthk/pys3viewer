@@ -1,10 +1,12 @@
 Listen 80
 
 Include conf.modules.d/*.conf
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
 
 User apache
 Group apache
-
 
 ServerAdmin root@{{server_host_name}}
 
