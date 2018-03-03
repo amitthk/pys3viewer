@@ -41,6 +41,15 @@ In Consideration:
 | aws emr/hadoop      | Map reduce to speed up indexing                       |
 | mrjob               | to interface with elastic map reduce                  |
 
+** Hosted version
+Live version is hosted here:
+
+http://pys3viewer.mywire.org
+
+
+Application is hosted on Apache HTTPD, with pys3viewerapi hosten on gunicorn and reverse proxied by httpd.
+
+Jinja templates for WSGI and mod_wsgi are also added in ansible/templates.
 
 ** How to install
 
