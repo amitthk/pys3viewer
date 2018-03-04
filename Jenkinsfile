@@ -13,10 +13,10 @@ currentBuild.result = "SUCCESS"
    def baseDir;
    def deploy_env;
    def deploy_userid;
+   def repo_bucket_credentials_id;
    
    stage('Initalize'){
-   //Get these from parameters later
-       pythonHome = tool 'python-3.6.4'
+       pythonHome = '/usr/local/bin/python3.6' ;
 	   project_id = 'pys3viewer';
 	   aws_s3_bucket_name = 'jvcdp-repo';
 	   aws_s3_bucket_region = 'ap-southeast-1';
@@ -25,7 +25,7 @@ currentBuild.result = "SUCCESS"
 	   currentBranch = getCurrentBranch();
 	   deploy_env=getTargetEnv(currentBranch);
 	   deploy_userid='ec2-user';
-//	   artifact_id = version();
+       repo_bucket_credentials_id = 's3mavenadmin';
    }
 
    
@@ -38,131 +38,76 @@ def build_scripts = load "${baseDir} /jenkins/build_scripts.groovy";
 def deploy_scripts = load "${baseDir} /jenkins/deploy_scripts.groovy";
 def utility_scripts = load "${baseDir} /jenkins/utility.groovy";
 
-   stage('Get UI Dependencies'){
-       build_scripts.get_ui_dependencies();
-   }
-   stage('Build UI'){
-       build_scripts.build_ui();
-   }
+	stage('UI Cleanup'){
+		build_scripts.ui_cleanup(baseDir, project_id, deploy_env, npmHome, timeStamp);
+	}
 
-    stage('Publish to S3'){
-        build_scripts.publish_ui_to_s3();
-  
-    }
+	stage('UI Dependencies'){
+		build_scripts.ui_get_dependencies(baseDir, project_id, deploy_env, npmHome, timeStamp);
+	}
 
-   stage ("Install Application Dependencies") {
-        sh '''
-            source bin/activate
-            pip install -r <relative path to requirements file>
-            deactivate
-           '''
-    }
+	stage('UI Code Analysis'){
+		build_scripts.ui_code_analysis(baseDir, project_id, deploy_env, npmHome, timeStamp);
+	}
 
-   
-   stage('Code Analysis'){
+	stage('UI Build'){
+		build_scripts.ui_build(baseDir, project_id, deploy_env, npmHome, timeStamp);
+	}
 
-       echo 'perform code analysis here!'
-   }
-   
-   
-       stage ("Collect Static files") {
-        sh '''
-            source bin/activate
-            python <relative path to manage.py> collectstatic --noinput
-            deactivate
-           '''
-    }
+	stage('UI Archive')
+	{
+		build_scripts.ui_archive(baseDir, project_id, deploy_env, npmHome, timeStamp);
+	}
 
-	stage ("Run Unit/Integration Tests") {
-        def testsError = null
-        try {
-            sh '''
-                source ../bin/activate
-                python <relative path to manage.py> jenkins
-                deactivate
-               '''
-        }
-        catch(err) {
-            testsError = err
-            currentBuild.result = 'FAILURE'
-        }
-        finally {
-            junit 'reports/junit.xml'
+    stage('UI Publish')
+	{
+		build_scripts.api_archive(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+	}
 
-            if (testsError) {
-                throw testsError
+    stage('API Cleanup'){
+		build_scripts.api_cleanup(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+	}
+/*
+	stage('API Dependencies'){
+		build_scripts.api_get_dependencies(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+	}
+
+	stage('API Code Analysis'){
+		build_scripts.api_code_analysis(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+	}
+*/
+	stage('API Build'){
+		build_scripts.api_build(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+	}
+
+	stage('API Archive')
+	{
+		build_scripts.api_archive(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+	}
+
+	stage('API Publish')
+	{
+		build_scripts.publish_to_s3(project_id, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
+	}
+/*
+    if(deploy_env=="all"){
+    def envlist = ["dev", "sit", "uat", "staging","prod"];
+        for(itm in envlist){
+            stage("Checkpoint ${itm}"){
+                deploy_scripts.checkAndDeploy(baseDir, itm, timeStamp, deploy_userid, project_id);
             }
         }
     }
-
-  stage('Build'){
-    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
-    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-    credentialsId: 's3mavenadmin', 
-    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])  
-	{
-          awsIdentity() //show us what aws identity is being used
-        def targetLocation = 'vendor_binaries/Python-3.6.3.tgz';
-        withAWS(region: aws_s3_bucket_region) {
-        s3Download(pathStyleAccessEnabled: true, file: 'Python-3.6.3.tgz', bucket: aws_s3_bucket_name, path: targetLocation);
-		s3Download(pathStyleAccessEnabled: true, file: 'virtualenv-15.1.0.tar.gz', bucket: aws_s3_bucket_name, path: targetLocation);
+    else{
+        if(deploy_env!='none')
+        {
+            stage("Deploy to ${deploy_env}")
+            {
+                deploy_scripts.checkAndDeploy(baseDir, deploy_env, timeStamp, deploy_userid, project_id);
+            }
         }
-	}
-	sh """
-	   tar xzf Python-3.6.3.tgz
-	   cd Python-3.6.3.tgz
-	   mkdir -p ~/.localpython
-	   ./configure --prefix=$HOME/.localpython
-	   make
-	   make install
-	   mkdir -p src
-	   tar -zxvf virtualenv-15.1.0.tar.gz ./src
-	   cd virtualenv-15.1.0
-	   ~/.localpython/bin/python setup.py install
-	   python -m virtualenv ve -p $HOME/.localpython/bin/python3.6
-	   source ve/bin/activate
-	   
-	
-	"""
-  }
-   stage('Stash')
-   {
-      stash includes: 'dist/*.tar.gz', name: 'dist'
-   }
-
-/*    stage('Send Build to S3')
-    {
-    unstash 'dist';
-    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
-    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-    credentialsId: 's3mavenadmin', 
-    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])  
-	 {
-        awsIdentity() //show us what aws identity is being used
-        def distLocation = project_id + '/builds/' + timeStamp;
-        withAWS(region: aws_s3_bucket_region) {
-        s3Upload(file: 'dist', bucket: aws_s3_bucket_name, path: distLocation)
-        }
-     }
     }
 */
-	if(deploy_env=="all"){
-	def envlist = ["dev", "sit", "uat", "staging","prod"];
-		for(itm in envlist){
-			stage("Checkpoint ${itm}"){
-				checkAndDeploy(baseDir, itm, timeStamp, deploy_userid, project_id);
-			}
-		}
-	}
-	else{
-		if(deploy_env!='none')
-		{
-			stage("Deploy to ${deploy_env}")
-			{
-				checkAndDeploy(baseDir, deploy_env, timeStamp, deploy_userid, project_id);
-			}
-		}
-	}
   } catch (err) {
 
         currentBuild.result = "FAILURE"
