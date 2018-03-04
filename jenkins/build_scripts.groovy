@@ -1,5 +1,5 @@
 def ui_cleanup(String baseDir, String project_id,String deploy_env,  String timeStamp){
-	sh "cd ${baseDir}/${project_id} && rm -rf dist && rm -rf dist.tar.gz && rm -rf release/*.tar.gz"
+	sh "cd ${baseDir}/${project_id} && rm -rf dist/*.tar.gz && rm -rf dist && rm -rf *.tar.gz"
 }
 
 def ui_get_dependencies(String baseDir, String project_id,String deploy_env,  String timeStamp){
@@ -27,11 +27,11 @@ def ui_build(String baseDir, String project_id,String deploy_env,  String timeSt
 def ui_archive(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	sh "cd ${baseDir}/${project_id}/dist && tar -czvf ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ."
 	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/dist"
-	stash includes: "${baseDir}/${project_id}/dist/${project_id}-${timeStamp}.tar.gz", name: "${project_id}_dist"
+	stash includes: "${project_id}/dist/*.tar.gz", name: "${project_id}_dist"
 }
 
 def api_cleanup(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-	sh "cd ${baseDir} && rm -rf dist && rm -rf build"
+	sh "cd ${baseDir} && rm -rf build && rm -rf *.tar.gz"
 }
 
 def api_get_dependencies(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
@@ -55,15 +55,15 @@ def api_build(String baseDir, String project_id,String deploy_env, String python
 
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
 	sh "cd ${baseDir}/${project_id}/build && tar -czvf ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ."
-	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/dist"
-	stash includes: "${baseDir}/${project_id}/build/${project_id}-${timeStamp}.tar.gz", name: "${project_id}_dist"
+	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/build"
+	stash includes: "${project_id}/build/*.tar.gz", name: "${project_id}_dist"
 }
 
 
 def api_setup_environment(){
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-    credentialsId: 's3mavenadmin', 
+    credentialsId: 's3repoadmin', 
     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])  
 	{
           awsIdentity() //show us what aws identity is being used
