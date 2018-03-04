@@ -1,5 +1,5 @@
 def ui_cleanup(String baseDir, String project_id,String deploy_env,  String timeStamp){
-	sh "cd ${baseDir}/${project_id} && rm -rf dist/*.tar.gz && rm -rf dist && rm -rf *.tar.gz"
+	sh "cd ${baseDir}/${project_id} && rm -rf dist && rm -rf release && mkdir -p release"
 }
 
 def ui_get_dependencies(String baseDir, String project_id,String deploy_env,  String timeStamp){
@@ -25,12 +25,12 @@ def ui_build(String baseDir, String project_id,String deploy_env,  String timeSt
 }
 
 def ui_archive(String baseDir, String project_id,String deploy_env,  String timeStamp){
-	sh "cd ${baseDir}/${project_id}/dist && tar -czvf ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ."
-	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/dist"
-	stash includes: "${project_id}/dist/*.tar.gz", name: "${project_id}_dist"
+	sh "cd ${baseDir}/${project_id}/dist && tar -czvf ${baseDir}/${project_id}/release/${project_id}-${timeStamp}.tar.gz ."
+	stash includes: "${project_id}/release/*.tar.gz", name: "${project_id}_dist"
 }
 
 def api_cleanup(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
+	sh "cd ${baseDir} && rm -rf release && mkdir release"
 	sh "cd ${baseDir} && rm -rf build && rm -rf *.tar.gz"
 }
 
@@ -54,9 +54,8 @@ def api_build(String baseDir, String project_id,String deploy_env, String python
 }
 
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-	sh "cd ${baseDir}/${project_id}/build && tar -czvf ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ."
-	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/build"
-	stash includes: "${project_id}/build/*.tar.gz", name: "${project_id}_dist"
+	sh "cd ${baseDir}/${project_id}/build && tar -czvf ${baseDir}/release/${project_id}-${timeStamp}.tar.gz ."
+	stash includes: "release/*.tar.gz", name: "${project_id}_dist"
 }
 
 
