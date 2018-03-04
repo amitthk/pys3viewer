@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 def getTimeStamp(){
 	def dateFormat = new SimpleDateFormat("yyyyMMddHHmm")
 	def date = new Date()

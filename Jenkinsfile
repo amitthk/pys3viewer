@@ -1,6 +1,3 @@
-import java.text.SimpleDateFormat
-
-
 node {
 currentBuild.result = "SUCCESS"
   try{
