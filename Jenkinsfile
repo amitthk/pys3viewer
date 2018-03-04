@@ -16,6 +16,10 @@ currentBuild.result = "SUCCESS"
    def repo_bucket_credentials_id;
    def utility_scripts = load "jenkins/utility.groovy";
 
+   stage('Checkout') {
+      checkout scm;
+   }
+
    stage('Initalize'){
        pythonHome = '/usr/local/bin/python3.6' ;
 	   project_id = 'pys3viewer';
@@ -29,11 +33,6 @@ currentBuild.result = "SUCCESS"
        repo_bucket_credentials_id = 's3repoadmin';
    }
 
-   
-   stage('Checkout') { // for display purposes
-      // Get latest code from a GitHub repository
-      checkout scm;
-   }
 
 def build_scripts = load "jenkins/build_scripts.groovy";
 def deploy_scripts = load "jenkins/deploy_scripts.groovy";
