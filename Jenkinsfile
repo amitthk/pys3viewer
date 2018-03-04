@@ -14,12 +14,11 @@ currentBuild.result = "SUCCESS"
    def deploy_env;
    def deploy_userid;
    def repo_bucket_credentials_id;
-   def utility_scripts = load "jenkins/utility.groovy";
 
    stage('Checkout') {
       checkout scm;
    }
-
+   def utility_scripts = load "jenkins/utility.groovy";
    stage('Initalize'){
        pythonHome = '/usr/local/bin/python3.6' ;
 	   project_id = 'pys3viewer';
