@@ -50,11 +50,11 @@ def api_code_analysis(String baseDir, String project_id,String deploy_env, Strin
 }
 
 def api_build(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-		sh "cd ${baseDir}/${project_id} && ${pythonHome} setup.py build"
+		sh "cd ${baseDir} && ${pythonHome} setup.py build"
 }
 
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-	sh "cd ${baseDir}/${project_id}/build && tar -czvf ${baseDir}/release/${project_id}-${timeStamp}.tar.gz ."
+	sh "cd ${baseDir}/build && tar -czvf ${baseDir}/release/${project_id}-${timeStamp}.tar.gz ."
 	stash includes: "release/*.tar.gz", name: "${project_id}_dist"
 }
 
