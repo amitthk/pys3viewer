@@ -62,7 +62,7 @@ currentBuild.result = "SUCCESS"
 
     stage('UI Publish')
 	{
-        def stash_dist_path = "${ui_project_id}/release/*.tar.gz";
+        def stash_dist_path = "${ui_project_id}/release";
 		build_scripts.publish_to_s3(ui_project_id, stash_dist_path, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
 
@@ -89,7 +89,7 @@ currentBuild.result = "SUCCESS"
 
 	stage('API Publish')
 	{
-        def stash_dist_path = "release/*.tar.gz";
+        def stash_dist_path = "release";
 		build_scripts.publish_to_s3(api_project_id, stash_dist_path, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
 /*
