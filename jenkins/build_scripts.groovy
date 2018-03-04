@@ -99,7 +99,7 @@ def publish_to_s3(String project_id, String aws_s3_bucket_region, String aws_s3_
 		awsIdentity() //show us what aws identity is being used
 		def distLocation = project_id + '/releases/';
 		withAWS(region: aws_s3_bucket_region){
-		s3Upload(file: 'dist', bucket: aws_s3_bucket_name, path: distLocation)
+		s3Upload(file: "${project_id}/**/*.tar.gz", bucket: aws_s3_bucket_name, path: distLocation)
 		}
 	}
 }
