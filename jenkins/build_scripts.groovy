@@ -27,7 +27,7 @@ def ui_build(String baseDir, String project_id,String deploy_env,  String timeSt
 def ui_archive(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	sh "cd ${baseDir}/${project_id}/dist && tar -czvf ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ."
 	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/dist"
-	stash includes: '${project_id}/dist/*.tar.gz', name: "${project_id}_dist"
+	stash includes: "${baseDir}/${project_id}/dist/${project_id}-${timeStamp}.tar.gz", name: "${project_id}_dist"
 }
 
 def api_cleanup(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
@@ -56,7 +56,7 @@ def api_build(String baseDir, String project_id,String deploy_env, String python
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
 	sh "cd ${baseDir}/${project_id}/build && tar -czvf ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ."
 	sh "mv ${baseDir}/${project_id}/${project_id}-${timeStamp}.tar.gz ${baseDir}/${project_id}/dist"
-	stash includes: '${project_id}/build/*.tar.gz', name: "${project_id}_dist"
+	stash includes: "${baseDir}/${project_id}/build/${project_id}-${timeStamp}.tar.gz", name: "${project_id}_dist"
 }
 
 
