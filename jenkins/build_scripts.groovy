@@ -1,14 +1,14 @@
-def ui_cleanup(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
+def ui_cleanup(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	sh "cd ${baseDir}/${project_id} && rm -rf dist && rm -rf dist.tar.gz && rm -rf release/*.tar.gz"
 }
 
-def ui_get_dependencies(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
+def ui_get_dependencies(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	withNPM(npmrcConfig: '.npmrc'){
 		sh "cd ${baseDir}/${project_id} && npm install --max-old-space-size=200"
 	}
 }
 
-def ui_code_analysis(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
+def ui_code_analysis(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	try{
 		withNPM(npmrcConfig: '.npmrc'){
 			sh 'cd ${baseDir}/${project_id} && npm run lint';
@@ -18,13 +18,13 @@ def ui_code_analysis(String baseDir, String project_id,String deploy_env, String
 	}
 }
 
-def ui_build(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
+def ui_build(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	withNPM(npmrcConfig: '.npmrc') {
 		sh "cd ${baseDir}/${project_id} && npm run ng build --prod -- --environment=${deploy_env} --max-old-space-size=200"
 	}
 }
 
-def ui_archive(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
+def ui_archive(String baseDir, String project_id,String deploy_env,  String timeStamp){
 	sh "cd ${baseDir}/${project_id}/dist && tar -czvf ${baseDir}/${project_id}/dist/${project_id}-${timeStamp}.tar.gz ."
 	stash includes: '${baseDir}/${project_id}/dist/*.tar.gz', name: "${project_id}_dist"
 }
