@@ -1,34 +1,4 @@
 
-def getTargetEnv(String branchName){
-	def deploy_env="dev";
-	switch(branchName){
-		case('develop'):
-		deploy_env="dev";
-		break;
-		case('sit'):
-		deploy_env="sit";
-		break;
-		case('uat'):
-		deploy_env="uat";
-		break;
-		case('staging'):
-		deploy_env="staging";
-		break;
-		case('master'):
-		deploy_env="prod";
-		break;
-		case('cdp'):
-		deploy_env="all";
-		break;
-		default:
-			if(branchName.startsWith("feature")){
-				deploy_env="none"
-			}
-		break;
-	}
-	return deploy_env;
-}
-
 def checkAndDeploy(String baseDir, String envname, String timeStamp,  String deploy_userid, String project_id){
 	  def  c_userInput = false;
 	  def c_didTimeout = false;
