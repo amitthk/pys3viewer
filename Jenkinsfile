@@ -36,24 +36,24 @@ currentBuild.result = "SUCCESS"
    }
 
 	stage('UI Cleanup'){
-		build_scripts.ui_cleanup(baseDir, project_id, deploy_env, npmHome, timeStamp);
+		build_scripts.ui_cleanup(baseDir, project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Dependencies'){
-		build_scripts.ui_get_dependencies(baseDir, project_id, deploy_env, npmHome, timeStamp);
+		build_scripts.ui_get_dependencies(baseDir, project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Code Analysis'){
-		build_scripts.ui_code_analysis(baseDir, project_id, deploy_env, npmHome, timeStamp);
+		build_scripts.ui_code_analysis(baseDir, project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Build'){
-		build_scripts.ui_build(baseDir, project_id, deploy_env, npmHome, timeStamp);
+		build_scripts.ui_build(baseDir, project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Archive')
 	{
-		build_scripts.ui_archive(baseDir, project_id, deploy_env, npmHome, timeStamp);
+		build_scripts.ui_archive(baseDir, project_id, deploy_env, timeStamp);
 	}
 
     stage('UI Publish')

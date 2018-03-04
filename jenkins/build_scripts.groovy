@@ -3,14 +3,14 @@ def ui_cleanup(String baseDir, String project_id,String deploy_env, String npmHo
 }
 
 def ui_get_dependencies(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
-	withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]){
+	withNPM(npmrcConfig: '.npmrc'){
 		sh "cd ${baseDir}/${project_id} && npm install --max-old-space-size=200"
 	}
 }
 
 def ui_code_analysis(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
 	try{
-		withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]){
+		withNPM(npmrcConfig: '.npmrc'){
 			sh 'cd ${baseDir}/${project_id} && npm run lint';
 		}
 	}catch(err){
@@ -19,7 +19,7 @@ def ui_code_analysis(String baseDir, String project_id,String deploy_env, String
 }
 
 def ui_build(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
-	withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]) {
+	withNPM(npmrcConfig: '.npmrc') {
 		sh "cd ${baseDir}/${project_id} && npm run ng build --prod -- --environment=${deploy_env} --max-old-space-size=200"
 	}
 }
