@@ -3,6 +3,8 @@ currentBuild.result = "SUCCESS"
   try{
    def pythonHome;
    def project_id;
+   def ui_project_id;
+   def api_project_id;
    def artifact_id;
    def aws_s3_bucket_name;
    def aws_s3_bucket_region;
@@ -22,7 +24,9 @@ currentBuild.result = "SUCCESS"
    stage('Initalize'){
        pythonHome = '/usr/local/bin/python3.6' ;
 	   project_id = 'pys3viewer';
-	   aws_s3_bucket_name = 'jvcdp-repo';
+	   ui_project_id = 'pys3viewerui';
+	   api_project_id = 'pys3viewerapi';
+	   aws_s3_bucket_name = 'pys3viewer-repo';
 	   aws_s3_bucket_region = 'ap-southeast-1';
        utility_scripts = load "jenkins/utility.groovy";
 	   timeStamp = utility_scripts.getTimeStamp();
@@ -36,55 +40,55 @@ currentBuild.result = "SUCCESS"
    }
 
 	stage('UI Cleanup'){
-		build_scripts.ui_cleanup(baseDir, project_id, deploy_env, timeStamp);
+		build_scripts.ui_cleanup(baseDir, ui_project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Dependencies'){
-		build_scripts.ui_get_dependencies(baseDir, project_id, deploy_env, timeStamp);
+		build_scripts.ui_get_dependencies(baseDir, ui_project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Code Analysis'){
-		build_scripts.ui_code_analysis(baseDir, project_id, deploy_env, timeStamp);
+		build_scripts.ui_code_analysis(baseDir, ui_project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Build'){
-		build_scripts.ui_build(baseDir, project_id, deploy_env, timeStamp);
+		build_scripts.ui_build(baseDir, ui_project_id, deploy_env, timeStamp);
 	}
 
 	stage('UI Archive')
 	{
-		build_scripts.ui_archive(baseDir, project_id, deploy_env, timeStamp);
+		build_scripts.ui_archive(baseDir, ui_project_id, deploy_env, timeStamp);
 	}
 
     stage('UI Publish')
 	{
-		build_scripts.api_archive(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+		build_scripts.publish_to_s3(ui_project_id, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
 
     stage('API Cleanup'){
-		build_scripts.api_cleanup(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+		build_scripts.api_cleanup(baseDir, api_project_id, deploy_env, pythonHome, timeStamp);
 	}
 /*
 	stage('API Dependencies'){
-		build_scripts.api_get_dependencies(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+		build_scripts.api_get_dependencies(baseDir, api_project_id, deploy_env, pythonHome, timeStamp);
 	}
 
 	stage('API Code Analysis'){
-		build_scripts.api_code_analysis(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+		build_scripts.api_code_analysis(baseDir, api_project_id, deploy_env, pythonHome, timeStamp);
 	}
 */
 	stage('API Build'){
-		build_scripts.api_build(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+		build_scripts.api_build(baseDir, api_project_id, deploy_env, pythonHome, timeStamp);
 	}
 
 	stage('API Archive')
 	{
-		build_scripts.api_archive(baseDir, project_id, deploy_env, pythonHome, timeStamp);
+		build_scripts.api_archive(baseDir, api_project_id, deploy_env, pythonHome, timeStamp);
 	}
 
 	stage('API Publish')
 	{
-		build_scripts.publish_to_s3(project_id, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
+		build_scripts.publish_to_s3(api_project_id, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
 /*
     if(deploy_env=="all"){

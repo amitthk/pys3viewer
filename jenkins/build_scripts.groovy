@@ -35,24 +35,21 @@ def api_cleanup(String baseDir, String project_id,String deploy_env, String pyth
 
 def api_get_dependencies(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
 	withEnv(["PYTHON_HOME=${pythonHome}"]) {
-		sh "cd ${baseDir}/${project_id} && npm install --max-old-space-size=200"
+		sh "cd ${baseDir} && ${pythonHome} -m virtualenv ${baseDir}/${project_id}/pys3venv -p ${pythonHome}";
+		sh "cd ${baseDir} && ${baseDir}/${project_id}/pys3venv/bin/python3.6 -m pip install -r requirements.txt";
 	}
 }
 
 def api_code_analysis(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
 	try{
-		withEnv(["PYTHON_HOME=${pythonHome}"]) {
 			sh 'cd ${baseDir}/${project_id} && pylint pys3viewer'
-		}
 	}catch(err){
 		echo 'Code Quality Analysis failed!'
 	}
 }
 
 def api_build(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-	withEnv(["PYTHON_HOME=${pythonHome}"]) {
-		sh "cd ${baseDir}/${project_id} && python install.py build"
-	}
+		sh "cd ${baseDir}/${project_id} && ${pythonHome} setup.py build"
 }
 
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
