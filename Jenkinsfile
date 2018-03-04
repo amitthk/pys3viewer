@@ -14,7 +14,7 @@ currentBuild.result = "SUCCESS"
    def deploy_env;
    def deploy_userid;
    def repo_bucket_credentials_id;
-   def utility_scripts = load "${baseDir} /jenkins/utility.groovy";
+   def utility_scripts = load "${baseDir}/jenkins/utility.groovy";
 
    stage('Initalize'){
        pythonHome = '/usr/local/bin/python3.6' ;
@@ -35,8 +35,8 @@ currentBuild.result = "SUCCESS"
       checkout scm;
    }
 
-def build_scripts = load "${baseDir} /jenkins/build_scripts.groovy";
-def deploy_scripts = load "${baseDir} /jenkins/deploy_scripts.groovy";
+def build_scripts = load "${baseDir}/jenkins/build_scripts.groovy";
+def deploy_scripts = load "${baseDir}/jenkins/deploy_scripts.groovy";
 
 	stage('UI Cleanup'){
 		build_scripts.ui_cleanup(baseDir, project_id, deploy_env, npmHome, timeStamp);
