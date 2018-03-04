@@ -62,7 +62,7 @@ currentBuild.result = "SUCCESS"
 
     stage('UI Publish')
 	{
-        def stash_dist_path = "${api_project_id}/build/*.tar.gz";
+        def stash_dist_path = "${api_project_id}/dist/*.tar.gz";
 		build_scripts.publish_to_s3(ui_project_id, stash_dist_path, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
 
