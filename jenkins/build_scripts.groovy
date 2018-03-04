@@ -3,18 +3,18 @@ def ui_cleanup(String baseDir, String project_id,String deploy_env, String npmHo
 }
 
 def ui_get_dependencies(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
-	withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]) {
+	withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]){
 		sh "cd ${baseDir}/${project_id} && npm install --max-old-space-size=200"
 	}
 }
 
 def ui_code_analysis(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
 	try{
-		withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]) {
-			sh 'cd ${baseDir}/${project_id} && npm run lint'
+		withEnv(["PATH+NODE=${npmHome}/bin","NODE_HOME=${npmHome}"]){
+			sh 'cd ${baseDir}/${project_id} && npm run lint';
 		}
 	}catch(err){
-		echo 'Code Quality Analysis failed!'
+		echo 'Code Quality Analysis failed!';
 	}
 }
 
@@ -25,7 +25,6 @@ def ui_build(String baseDir, String project_id,String deploy_env, String npmHome
 }
 
 def ui_archive(String baseDir, String project_id,String deploy_env, String npmHome, String timeStamp){
-{
 	sh "cd ${baseDir}/${project_id}/dist && tar -czvf ${baseDir}/${project_id}/dist/${project_id}-${timeStamp}.tar.gz ."
 	stash includes: '${baseDir}/${project_id}/dist/*.tar.gz', name: "${project_id}_dist"
 }
@@ -57,13 +56,12 @@ def api_build(String baseDir, String project_id,String deploy_env, String python
 }
 
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-{
 	sh "cd ${baseDir}/${project_id}/build && tar -czvf ${baseDir}/${project_id}/build/${project_id}-${timeStamp}.tar.gz ."
 	stash includes: '${baseDir}/${project_id}/build/*.tar.gz', name: "${project_id}_dist"
 }
 
 
-def api_build_v1(){
+def api_setup_environment(){
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
     credentialsId: 's3mavenadmin', 
@@ -89,7 +87,7 @@ def api_build_v1(){
 	   ~/.localpython/bin/python setup.py install
 	   python -m virtualenv ve -p $HOME/.localpython/bin/python3.6
 	   source ve/bin/activate
-	"""
+	""";
 }
 
 def publish_to_s3(String project_id, String aws_s3_bucket_region, String aws_s3_bucket_name, String jenkins_credentials_id, String timeStamp){
@@ -101,7 +99,7 @@ def publish_to_s3(String project_id, String aws_s3_bucket_region, String aws_s3_
 		unstash "${project_id}_dist"
 		awsIdentity() //show us what aws identity is being used
 		def distLocation = project_id + '/releases/';
-		withAWS(region: aws_s3_bucket_region) {
+		withAWS(region: aws_s3_bucket_region){
 		s3Upload(file: 'dist', bucket: aws_s3_bucket_name, path: distLocation)
 		}
 	}
@@ -114,7 +112,7 @@ def check_install_virtualenv(){
         stage("Install Python Virtual Enviroment") {
             sh "${pythonHome} -m virtualenv --no-site-packages ."
         }
-    }   
+    }
 }
 
 def get_ui_dependencies(){
@@ -124,14 +122,14 @@ def get_ui_dependencies(){
 		    rm -rf dist.tar.gz
 		    rm -rf rm -rf release/*.tar.gz
 		    npm install
-		    '''
+		    ''';
 }
 
 def build_ui(){
     		sh '''
 		    cd pys3viewerui
 		    npm run ng build --prod -- --environment=${deploy_env} --max-old-space-size=200
-		    '''
+		    ''';
 }
 
 def archive_and_stash_ui(){
@@ -141,9 +139,9 @@ def archive_and_stash_ui(){
        cd dist
        tar -czvf ../release/${project_id}ui-${timeStamp}.tar.gz .
        cd ..
-       '''
-       stash includes: 'release/*.tar.gz', name: "${project_id}_ui"
-       stash includes: 'dist/**/*', name: "${project_id}_ui_dist"
+       ''';
+       stash includes: 'release/*.tar.gz', name: "${project_id}_ui";
+       stash includes: 'dist/**/*', name: "${project_id}_ui_dist";
 }
 
 return this;

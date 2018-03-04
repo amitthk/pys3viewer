@@ -11,27 +11,29 @@ currentBuild.result = "SUCCESS"
    def deploy_env;
    def deploy_userid;
    def repo_bucket_credentials_id;
+   def utility_scripts;
+   def build_scripts;
+   def deploy_scripts;
 
+   
    stage('Checkout') {
       checkout scm;
    }
-   def utility_scripts = load "jenkins/utility.groovy";
    stage('Initalize'){
        pythonHome = '/usr/local/bin/python3.6' ;
 	   project_id = 'pys3viewer';
 	   aws_s3_bucket_name = 'jvcdp-repo';
 	   aws_s3_bucket_region = 'ap-southeast-1';
+       utility_scripts = load "jenkins/utility.groovy";
 	   timeStamp = utility_scripts.getTimeStamp();
        baseDir = pwd();
 	   currentBranch = utility_scripts.getCurrentBranch();
 	   deploy_env = utility_scripts.getTargetEnv(currentBranch);
 	   deploy_userid='ec2-user';
        repo_bucket_credentials_id = 's3repoadmin';
+       build_scripts = load "jenkins/build_scripts.groovy";
+       deploy_scripts = load "jenkins/deploy_scripts.groovy";
    }
-
-
-def build_scripts = load "jenkins/build_scripts.groovy";
-def deploy_scripts = load "jenkins/deploy_scripts.groovy";
 
 	stage('UI Cleanup'){
 		build_scripts.ui_cleanup(baseDir, project_id, deploy_env, npmHome, timeStamp);
