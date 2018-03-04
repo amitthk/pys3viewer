@@ -6,7 +6,7 @@ def getTimeStamp(){
 	return dateFormat.format(date);
 }
 
-def getTargetEnv(String branchName){
+def getTargetEnv(String branchName) {
 	def deploy_env="dev";
 	switch(branchName){
 		case('develop'):
@@ -46,11 +46,9 @@ def runWithServer(body) {
     }
 }
 
-def getCurrentBranch () {
-    return sh (
-        script: 'git rev-parse --abbrev-ref HEAD',
-        returnStdout: true
-    ).trim()
+def getCurrentBranch() {
+    def branchName = sh (script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim();
+    return branchName;
 }
 
 def isFileAffected(String match) {
