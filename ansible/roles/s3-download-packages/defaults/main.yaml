@@ -1,0 +1,8 @@
+---
+dashboard_ui_package: "pys3viewerui/releases/pys3viewerui-201803041707.tar.gz"
+pys3viewer_api_package: "pys3viewerapi/releases/pys3viewerapi-201803041724.tar.gz"
+
+
+install_binaries:
+  - "{{dashboard_ui_package}}"
+  - "{{pys3viewer_api_package}}"

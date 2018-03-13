@@ -1,0 +1,11 @@
+---
+- name: install the latest version of Apache httpd
+  yum:
+    name: httpd
+    state: latest 
+  become: true	
+- name: Restart Apache httpd
+  service:
+    name: httpd
+    state: restarted	
+  become: true	

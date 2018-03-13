@@ -1,0 +1,27 @@
+---
+- name: create directory to store the packages
+file:
+ path: /tmp/packages
+ state: directory
+ owner: ec2-user
+ group: ec2-user
+ mode: 0775
+ recurse: yes
+become: true
+- name: download prerequisites python packages from s3 repo
+s3:
+ bucket: pys3viewer-repo
+ object: "{{ item }}"
+ dest: "/tmp/packages/{{ item }}"
+ mode: get
+ aws_access_key: "{{ s3_aws_access_key_Id }}"
+ aws_secret_key: "{{ s3_secret_access_key }}"
+with_items:
+  - "{{install_packages}}"
+- name: setting permission to packages folder
+file:
+ path: /tmp/packages/{{item}}
+ mode: 0775
+become: true
+with_items:
+  - "{{install_packages}}"

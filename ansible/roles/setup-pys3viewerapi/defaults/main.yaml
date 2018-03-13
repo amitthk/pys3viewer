@@ -1,9 +1,4 @@
 ---
-ui_app_name: pys3viewerui
-ui_context_root: /var/www/{{ui_app_name}}
-api_context_root: /var/www/pys3viewerapi
-api_service_name: pys3viewerapi
-server_host_name: localhost
 base_dir: "~/app/"
 project_id: "pys3viewerapi"
 package_name: "pys3viewer"

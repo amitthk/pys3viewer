@@ -1,0 +1,15 @@
+---
+- hosts: "{{ deploy_host | default('dev') }}"
+  gather_facts: true
+  remote_user: "{{remote_user}}"
+  become: false
+  pre_tasks:
+     - name: insall python
+       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+       changed_when: False
+     - setup: #aka gather_facts
+  roles:
+   - { role: s3-download-binaries }
+   - { role: install-binaries }
+   - { role: install-httpd , become: true}
+   - { role: configure-httpd, become: true}

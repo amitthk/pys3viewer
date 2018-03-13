@@ -1,0 +1,20 @@
+---
+- name: Check if  is already installed
+  shell: pip list
+  register: pip_check
+  ignore_errors: true
+
+- name: Creates directory ~/tmp/pip
+  file: path=~/tmp/pip state=directory
+  when: ((pip_check.stdout.find('command not found') != -1)or(pip_check.stderr.find('command not found') != -1))
+
+- name: Upload pip
+  copy:
+    src: get-pip.py
+    dest: "~/tmp/pip"
+  when: ((pip_check.stdout.find('command not found') != -1)or(pip_check.stderr.find('command not found') != -1))
+
+- name: install pip
+  shell: "cd /home/{{ansible_ssh_user}}/tmp/pip/ && python get-pip.py"
+  become: true
+  when: ((pip_check.stdout.find('command not found') != -1)or(pip_check.stderr.find('command not found') != -1))

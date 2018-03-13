@@ -1,0 +1,18 @@
+---
+- name: Ensure aws CLI
+  pip: name=awscli state=present
+
+- name: "list the latest user-api jar from s3 bucket"
+  shell: "aws s3 ls --recursive s3://{{s3_bucket_name}}/{{project_id}}/builds | grep '.*\\.jar$' | sort | tail -n 1 | awk -F \" \" '{print $4}'"
+  register: resp
+  when: artifact_type == 'jar'
+- debug: var=resp
+
+- name: "list the latest {{project_id}} {{artifact_type}} from s3 bucket"
+  shell: "aws s3 ls --recursive s3://{{s3_bucket_name}}/{{project_id}}/builds | grep '.*\\.war$' | sort | tail -n 1 | awk -F \" \" '{print $4}'"
+  register: resp
+  when: artifact_type == 'war'
+- debug: var=resp
+
+- name: "download the latest to temp directory here: {{base_dir}}tmp/{{project_id}}/"
+  shell: "aws s3 cp s3://{{s3_bucket_name}}/{{resp.stdout}} {{base_dir}}tmp/{{project_id}}/"

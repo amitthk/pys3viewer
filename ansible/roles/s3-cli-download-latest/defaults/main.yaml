@@ -1,0 +1,6 @@
+---
+base_dir: ~/app
+user_base_dir: "/home/{{ansible_ssh_user}}/app"
+s3_bucket_name: jvcdp-repo
+project_id: user-api
+artifact_type: war

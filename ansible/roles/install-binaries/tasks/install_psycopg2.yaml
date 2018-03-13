@@ -1,0 +1,20 @@
+---
+- name: Check if  is already installed
+  command: python -c "import psycopg2"
+  register: psycopg2_check
+  ignore_errors: true
+
+- name: Creates directory ~/tmp/psycopg2
+  file: path=~/tmp/psycopg2 state=directory
+  when: ((psycopg2_check.stdout.find('No module named psycopg2') != -1)or(psycopg2_check.stderr.find('No module named psycopg2') != -1))
+
+- name: Upload psycopg2
+  copy:
+    src: vendor_binaries/{{psycopg2_file}}
+    dest: "~/tmp/psycopg2"
+  when: ((psycopg2_check.stdout.find('No module named psycopg2') != -1)or(psycopg2_check.stderr.find('No module named psycopg2') != -1))
+
+- name: install psycopg2
+  shell: "pip install ~/tmp/psycopg2/{{psycopg2_file}}"
+  become: true
+  when: ((psycopg2_check.stdout.find('No module named psycopg2') != -1)or(psycopg2_check.stderr.find('No module named psycopg2') != -1))
