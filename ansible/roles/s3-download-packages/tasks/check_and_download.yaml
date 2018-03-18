@@ -3,8 +3,8 @@
     path: "{{download_location}}/{{item}}"
   register: download_package_exists
 
-- name: download prerequisites python packages from s3 repo
-  s3:
+- name: "download {{ item }} from s3 repo""
+  aws_s3:
     bucket: pys3viewer-repo
     object: "{{ item }}"
     dest: "{{download_location}}/{{ item }}"

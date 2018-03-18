@@ -17,6 +17,17 @@
     recurse: yes
   become: true
 
+- name: install boto, tar and ksh packages
+  yum: name={{ item }} state=present
+  with_items:
+      - botocore
+      - boto3
+      - zip
+      - unzip
+      - ksh
+      - tar
+  become: true
+
 - include: check_and_download.yaml
   with_items:
     - "{{packages_to_download}}"
