@@ -1,19 +1,19 @@
 localhost ansible_connection=local ansible_ssh_user=ubuntu
 
 [dev]
-dev.jvcdp.mywire.org
+pys3viewer.mywire.org
 
 [sit]
-sit.jvcdp.mywire.org
+sit.pys3viewer.mywire.org
 
 [uat]
-uat.jvcdp.mywire.org
+uat.pys3viewer.mywire.org
 
 [staging]
-staging.jvcdp.mywire.org
+staging.pys3viewer.mywire.org
 
 [prod]
-dev.jvcdp.mywire.org
+pys3viewer.mywire.org
 
 [datacenter:children]
 dev
@@ -21,17 +21,6 @@ sit
 uat
 staging
 prod
-
-[dev:vars]
-ansible_connection=ssh
-ansible_ssh_user=ec2-user
-
-
-[prod:vars]
-ansible_connection=ssh
-ansible_ssh_user=ec2-user
-
-
 
 [datacenter:vars]
 ansible_connection=ssh
