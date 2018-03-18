@@ -92,6 +92,27 @@ currentBuild.result = "SUCCESS"
         def stash_dist_path = "release";
 		build_scripts.publish_to_s3(api_project_id, stash_dist_path, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
+    stage('Download Packages'){
+        def pys3viewer_api_package = "${ui_project_id}/releases/${ui_project_id}-${timeStamp}.tar.gz";
+        def dashboard_ui_package = "${api_project_id}/releases/${api_project_id}-${timeStamp}.tar.gz";
+        def extras_params = "-v -e deploy_host=${deploy_env} -e remote_user=${deploy_userid} -e dashboard_ui_package=${dashboard_ui_package} -e pys3viewer_api_package=${pys3viewer_api_package}".toString();
+		def playbook_to_run = 'ansible/download_packages.yaml';
+
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
+	    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+	    credentialsId: "${repo_bucket_credentials_id}", 
+	    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])
+        {
+            withEnv(['ANSIBLE_HOST_KEY_CHECKING=False'])
+            {
+                ansiblePlaybook( 
+                credentialsId: 'deployadmin',
+                playbook: playbook_to_run,
+                inventory: 'hosts', 
+                extras: extras_params)
+            }
+        }
+    }
 /*
     if(deploy_env=="all"){
     def envlist = ["dev", "sit", "uat", "staging","prod"];

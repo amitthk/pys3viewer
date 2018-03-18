@@ -1,0 +1,20 @@
+- name: Check if this package is already downloaded
+  stat:
+    path: "{{download_location}}/{{item}}"
+  register: download_package_exists
+
+- name: download prerequisites python packages from s3 repo
+  s3:
+    bucket: pys3viewer-repo
+    object: "{{ item }}"
+    dest: "{{download_location}}/{{ item }}"
+    mode: get
+    aws_access_key: "{{ s3_aws_access_key_Id }}"
+    aws_secret_key: "{{ s3_secret_access_key }}"
+  when: download_package_exists.stat.exists == False
+
+- name: setting permission to packages folder
+  file:
+    path: "{{download_location}}/{{item}}"
+    mode: 0775
+  become: true

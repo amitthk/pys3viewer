@@ -4,6 +4,5 @@
   remote_user: "{{remote_user}}"
   become: false
   roles:
-     - { role: s3-download-packages }
      - { role: setup-dashboardui , become: true}
      - { role: setup-pys3viewerapi, become: true}

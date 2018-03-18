@@ -1,0 +1,12 @@
+---
+- hosts: "{{ deploy_host | default('dev') }}"
+  gather_facts: true
+  remote_user: "{{remote_user}}"
+  become: false
+  vars:
+    dashboard_ui_package: "pys3viewerui/releases/pys3viewerui-201803041707.tar.gz"
+    pys3viewer_api_package: "pys3viewerapi/releases/pys3viewerapi-201803041724.tar.gz"
+    s3_aws_access_key_Id: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+    s3_secret_access_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
+  roles:
+     - { role: s3-download-packages }
