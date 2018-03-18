@@ -27,11 +27,16 @@
       - tar
   become: true
 
-# - name: install boto
-#   pip: name={{ item }} state=present
-#   with_items:
-#       - boto3
-#   become: true
+- name: Install pip
+  easy_install:
+    name: pip
+    state: latest
+
+- name: Install boto3
+  pip:
+    name: boto3
+    state: present
+  become: true
 
 - include: check_and_download.yaml
   with_items:
