@@ -20,7 +20,7 @@
 - name: install boto, tar and ksh packages
   yum: name={{ item }} state=present
   with_items:
-      - botocore
+      - boto
       - boto3
       - zip
       - unzip
