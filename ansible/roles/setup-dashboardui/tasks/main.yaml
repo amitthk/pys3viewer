@@ -1,11 +1,62 @@
 ---
-- name: install the latest version of Apache httpd
-  yum:
-    name: httpd
-    state: latest 
-  become: true	
-- name: Restart Apache httpd
-  service:
-    name: httpd
-    state: restarted	
-  become: true	
+- name: create backup location
+  file:
+    path: "{{backup_location}}"
+    state: directory
+    mode: 0755
+    recurse: true
+  become: true
+  become_user: "{{deploy_user}}"
+
+- name: Check if destination exists
+  stat:
+    path: "{{deploy_path}}"
+  register: deploy_path_exists
+
+- name: Backup existing package
+  command: "mv {{deploy_path}} {{backup_location}}/"
+  become: true
+  become_user: "{{deploy_user}}"
+  when: deploy_path_exists.stat.exists == True
+
+- name: Create deploy path again
+  file:
+    path: "{{deploy_path}}"
+    state: directory
+    mode: 0755
+    recurse: yes
+    user: httpd
+    group: httpd
+  become: true
+  become_user: "{{deploy_user}}"
+
+- name: Unzip the package to destination
+  unzip:
+    src: "{{download_location}}/{{dashboard_ui_package}}"
+    dest: "{{deploy_path}}"
+    mode: 0755
+    remote_src: yes
+    user: httpd
+    group: httpd
+  become: true
+  become_user: "{{deploy_user}}"
+
+# - name: Run command
+#   shell: |
+#     nohup npm run ng serve -- --environment={{deploy_env}} \
+#     1>> {{deploy_path}}/app.output.log \
+#     2>> {{deploy_path}}/app.error.log &
+#   args:
+#     executable: /bin/bash
+#     chdir: "{{deploy_path}}"
+#   environment:
+#     PATH: "{{deploy_env_path}}"
+
+- name: "Updat the config file"
+  replace:
+    dest: "{{env_config_path}}"
+    regexp: '^(.*)environment=(.*)$'
+    replace: "\1environment={{deploy_env}}"
+    backup: yes
+  become: true
+  become_user: "{{deploy_user}}"

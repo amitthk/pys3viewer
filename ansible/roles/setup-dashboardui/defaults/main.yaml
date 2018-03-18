@@ -1,9 +1,14 @@
 ---
 base_dir: "~/app/"
-project_id: "pys3viewerapi"
+project_id: "pys3viewerui"
 package_name: "pys3viewer"
-deploy_context_root: "pys3viewer"
+deploy_context_root: "pys3viewerui"
+deploy_location: "/var/www/{{project_id}}"
+backup_location: /tmp/backup/pys3viewerui/{{ansible_date_time.time}}
 spring_profiles_active: "local"
 package_base_dir: "{{inventory_dir | dirname}}"
 install_base_dir: "/var/www/apps"
 app_owner: "ec2-user"
+system_environment_path: "{{lookup('env','PATH')}}"
+java_home: /usr/share/java/1.8/jdk1.8.0_112
+deploy_env_path: "{{java_home}}/bin: {{system_environment_path}}"
