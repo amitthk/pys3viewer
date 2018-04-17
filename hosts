@@ -1,7 +1,7 @@
 localhost ansible_connection=local ansible_ssh_user=ubuntu
 
 [dev]
-54.255.234.45
+pys3viewer.mywire.org
 
 [sit]
 sit.pys3viewer.mywire.org
