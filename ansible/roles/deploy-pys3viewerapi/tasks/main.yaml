@@ -29,6 +29,7 @@
     - "pys3viewercli"
     - "tests"
     - "requirements.txt"
+  ignore_errors: true
   when: deploy_location_exists.stat.exists == True
 
 # - name: Create deploy path again
