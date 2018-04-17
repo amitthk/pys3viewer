@@ -33,7 +33,6 @@
     src: "{{download_location}}/{{dashboard_ui_package}}"
     dest: "{{deploy_location}}/"
     mode: 0755
-    copy: "no"
     owner: apache
     group: apache
   become: true
