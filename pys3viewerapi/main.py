@@ -52,7 +52,7 @@ class BucketList(Resource):
         buckets_for_user = bucket_manager.get_buckets_for_user()
         bucket_list = list()
         for bucket_name in buckets_for_user:
-            bucket_info = bucket_manager.get_bucket_statistics_v2(bucket_name)
+            bucket_info = bucket_manager.get_bucket_statistics(bucket_name)
             bucket_list.append(bucket_info)
         return bucket_list
 
@@ -94,7 +94,7 @@ class BucketObjects(Resource):
         bucket_list = list()
         for bucket_name in buckets_for_user:
             bucket_object = BucketDetailsModel(bucket_name)
-            bucket_object.file_paths = [str(f) for f in bucket_manager.get_files_in_bucket_v2(bucket_name)]
+            bucket_object.file_paths = [str(f) for f in bucket_manager.get_files_in_bucket(bucket_name)]
             bucket_list.append(bucket_object)
         return bucket_list
 
