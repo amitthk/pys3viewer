@@ -52,7 +52,7 @@
 #   environment:
 #     PATH: "{{deploy_env_path}}"
 
-- name: "Updat the config file"
+- name: "Update the config file"
   replace:
     dest: "{{env_config_path}}"
     regexp: '^(.*)environment=(.*)$'
