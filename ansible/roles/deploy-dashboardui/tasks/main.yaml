@@ -25,7 +25,7 @@
     state: directory
     mode: 0755
     recurse: yes
-    user: httpd
+    owner: httpd
     group: httpd
   become: true
   become_user: "{{deploy_user}}"
@@ -36,7 +36,7 @@
     dest: "{{deploy_location}}"
     mode: 0755
     remote_src: yes
-    user: httpd
+    owner: httpd
     group: httpd
   become: true
   become_user: "{{deploy_user}}"
