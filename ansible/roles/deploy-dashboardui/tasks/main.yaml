@@ -39,7 +39,7 @@
 - name: Copy download package to destination
   copy:
     src: "{{download_location}}/{{dashboard_ui_package}}"
-    dest: "{{download_location}}/{{dashboard_ui_package}}"
+    dest: "{{download_location}}/"
   become: true
 
 - name: Unzip the package to destination
