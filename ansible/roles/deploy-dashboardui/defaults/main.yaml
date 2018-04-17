@@ -3,7 +3,7 @@ base_dir: "~/app/"
 project_id: "pys3viewerui"
 package_name: "pys3viewer"
 deploy_context_root: "pys3viewerui"
-deploy_location: "/tmp/var/www/{{project_id}}"
+deploy_location: "/var/www/{{project_id}}"
 backup_location: /tmp/backup/pys3viewerui/{{ansible_date_time.time}}
 deploy_user: "ec2-user"
 system_environment_path: "{{lookup('env','PATH')}}"
