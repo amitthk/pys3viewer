@@ -28,10 +28,25 @@
     group: apache
   become: true
 
+- name: Ensure download location on destination server exist
+  file:
+    path: "{{download_location}}"
+    state: directory
+    mode: 0755
+    recurse: yes
+  become: true
+
+- name: Copy download package to destination
+  copy:
+    src: "{{download_location}}/{{dashboard_ui_package}}"
+    dest: "{{download_location}}/{{dashboard_ui_package}}"
+  become: true
+
 - name: Unzip the package to destination
   unarchive:
     src: "{{download_location}}/{{dashboard_ui_package}}"
     dest: "{{deploy_location}}/"
+    remote_src: "yes"
     mode: 0755
     owner: apache
     group: apache
