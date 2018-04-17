@@ -130,7 +130,7 @@ currentBuild.result = "SUCCESS"
     stage('Deploy API'){
         def pys3viewer_api_package = "${api_project_id}/releases/${api_project_id}-${timeStamp}.tar.gz";
         def extras_params = "-v -e deploy_host=${deploy_env} -e remote_user=${deploy_userid} -e pys3viewer_api_package=${pys3viewer_api_package}".toString();
-		def playbook_to_run = 'ansible/deploy_dashboardui.yaml';
+		def playbook_to_run = 'ansible/deploy_pys3viewerapi.yaml';
 
         withEnv(['ANSIBLE_HOST_KEY_CHECKING=False'])
         {
