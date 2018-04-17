@@ -54,7 +54,7 @@ def api_build(String baseDir, String project_id,String deploy_env, String python
 }
 
 def api_archive(String baseDir, String project_id,String deploy_env, String pythonHome, String timeStamp){
-	sh "cd ${baseDir}/build && tar -czvf ${baseDir}/release/${project_id}-${timeStamp}.tar.gz ."
+	sh "cd ${baseDir}/build/lib && tar -czvf ${baseDir}/release/${project_id}-${timeStamp}.tar.gz ."
 	stash includes: "release/*.tar.gz", name: "${project_id}_dist"
 }
 
