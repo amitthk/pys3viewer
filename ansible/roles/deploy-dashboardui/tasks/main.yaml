@@ -31,7 +31,7 @@
   become_user: "{{deploy_user}}"
 
 - name: Unzip the package to destination
-  unzip:
+  unarchive:
     src: "{{download_location}}/{{dashboard_ui_package}}"
     dest: "{{deploy_location}}"
     mode: 0755
