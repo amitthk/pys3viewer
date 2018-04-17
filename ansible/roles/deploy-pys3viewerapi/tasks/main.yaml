@@ -2,37 +2,65 @@
 - name: "configure the {{package_name}} API"
   debug:
     msg: "configure the {{package_name}} API"
-- name: "Ensures {{install_base_dir}}/{{deploy_context_root}} dir exists"
-  file:
-    path: "{{install_base_dir}}/{{deploy_context_root}}"
-    follow: yes
-    state: directory
-  become: true
 
 - name: Ensure gtar/unzip is installed on target machine
   package: name=unzip state=present
   become: true
+- name: create backup location
+  file:
+    path: "{{backup_location}}"
+    state: directory
+    mode: 0755
+    recurse: true
+  become: true
+  become_user: "{{deploy_user}}"
 
-- name: Unzip Tar file
+- name: Check if destination exists
+  stat:
+    path: "{{deploy_location}}"
+  register: deploy_location_exists
+
+- name: Backup existing package
+  command: "mv {{deploy_location}}/{{item}} {{backup_location}}/"
+  become: true
+  with_items:
+    - "pys3viewer"
+    - "pys3viewerapi"
+    - "pys3viewercli"
+    - "tests"
+    - "requirements.txt"
+  when: deploy_location_exists.stat.exists == True
+
+# - name: Create deploy path again
+#   file:
+#     path: "{{deploy_location}}"
+#     state: directory
+#     mode: 0755
+#     recurse: yes
+#     owner: apache
+#     group: apache
+#   become: true
+
+- name: Unzip the package to destination
   unarchive:
-    src: "{{ playbook_dir }}/dist/{{ package_name }}"
-    dest: "{{install_base_dir}}/{{deploy_context_root}}/"
-    follow: yes
-    mode: 0775
-    owner: {{app_owner}}
-    group: {{app_owner}}
+    src: "{{download_location}}/{{pys3viewer_api_package}}"
+    dest: "{{deploy_location}}/"
+    remote_src: "yes"
+    mode: 0755
+    owner: apache
+    group: apache
   become: true
 
-- name: Permissions for the artifacts
+- name: Set Permissions again
   file:
-    path: "{{install_base_dir}}/{{deploy_context_root}}/"
-    follow: yes
-    mode: 0775
-    owner: {{app_owner}}
-    group: {{app_owner}}
+    path: "{{deploy_location}}"
+    state: directory
+    mode: 0755
     recurse: yes
+    owner: apache
+    group: apache
   become: true
   
-#    - name: restart service from init.d
-#      service: name=pys3viewerapi state=restarted
-#      become: true
+  - name: restart service from init.d
+    service: name=pys3viewerapi state=restarted
+    become: true

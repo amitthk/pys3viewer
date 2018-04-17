@@ -127,6 +127,20 @@ currentBuild.result = "SUCCESS"
             extras: extras_params)
         }
     }
+    stage('Deploy API'){
+        def pys3viewer_api_package = "${api_project_id}/releases/${api_project_id}-${timeStamp}.tar.gz";
+        def extras_params = "-v -e deploy_host=${deploy_env} -e remote_user=${deploy_userid} -e pys3viewer_api_package=${pys3viewer_api_package}".toString();
+		def playbook_to_run = 'ansible/deploy_dashboardui.yaml';
+
+        withEnv(['ANSIBLE_HOST_KEY_CHECKING=False'])
+        {
+            ansiblePlaybook(
+            credentialsId: 'deployadmin',
+            playbook: playbook_to_run,
+            inventory: 'hosts',
+            extras: extras_params)
+        }
+    }
 /*
     if(deploy_env=="all"){
     def envlist = ["dev", "sit", "uat", "staging","prod"];

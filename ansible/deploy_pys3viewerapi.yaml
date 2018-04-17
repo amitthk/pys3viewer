@@ -1,0 +1,9 @@
+---
+- hosts: "{{ deploy_host | default('dev') }}"
+  gather_facts: true
+  remote_user: "{{remote_user}}"
+  become: false
+  vars:
+    pys3viewer_api_package: "pys3viewerapi/releases/pys3viewerapi-201803041707.tar.gz"
+  roles:
+     - { role: deploy-pys3viewerapi }
