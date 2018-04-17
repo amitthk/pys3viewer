@@ -69,9 +69,10 @@ class BucketManager:
         mapreduce_helper = SimpleMapReduce()
 
         object_list = self.iterate_bucket_objects(bucket_name)
+        bucket_obj_list = map(mapreduce_helper.map_object_info, object_list)
 
-        bucket_info.total_size_of_files = functools.reduce(mapreduce_helper.reduce_size, map(mapreduce_helper.map_object_info, object_list))
-        bucket_info.last_modified = functools.reduce(mapreduce_helper.reduce_last_modified, map(mapreduce_helper.map_object_info, object_list))
+        bucket_info.total_size_of_files = functools.reduce(mapreduce_helper.reduce_size, bucket_obj_list)
+        bucket_info.last_modified = functools.reduce(mapreduce_helper.reduce_last_modified, bucket_obj_list)
 
 
         return bucket_info

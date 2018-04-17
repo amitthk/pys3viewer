@@ -22,7 +22,7 @@ class SimpleMapReduce:
         return  bucket_object_info
 
 
-    def reduce_size(x, y):
+    def reduce_size(self, x, y):
         if isinstance(x, BucketObjectInfo) and isinstance(y, BucketObjectInfo):
             return x.Size + y.Size
         elif isinstance(x, BucketObjectInfo):
@@ -32,7 +32,7 @@ class SimpleMapReduce:
         else:
             return 0
 
-    def reduce_last_modified(x, y):
+    def reduce_last_modified(self, x, y):
         if isinstance(x, BucketObjectInfo) and isinstance(y, BucketObjectInfo):
             if x.LastModified > y.LastModified:
                 return x
