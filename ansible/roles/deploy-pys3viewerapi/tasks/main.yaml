@@ -61,6 +61,6 @@
     group: apache
   become: true
   
-  - name: restart service from init.d
-    service: name=pys3viewerapi state=restarted
-    become: true
+- name: restart service from init.d
+  service: name=pys3viewerapi state=restarted
+  become: true
