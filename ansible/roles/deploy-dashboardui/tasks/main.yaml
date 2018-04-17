@@ -16,7 +16,6 @@
 - name: Backup existing package
   command: "mv {{deploy_location}} {{backup_location}}/"
   become: true
-  become_user: "{{deploy_user}}"
   when: deploy_location_exists.stat.exists == True
 
 - name: Create deploy path again
