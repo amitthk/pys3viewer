@@ -93,8 +93,8 @@ currentBuild.result = "SUCCESS"
 		build_scripts.publish_to_s3(api_project_id, stash_dist_path, aws_s3_bucket_region, aws_s3_bucket_name, repo_bucket_credentials_id, timeStamp);
 	}
     stage('Download Packages'){
-        def pys3viewer_api_package = "${ui_project_id}/releases/${ui_project_id}-${timeStamp}.tar.gz";
-        def dashboard_ui_package = "${api_project_id}/releases/${api_project_id}-${timeStamp}.tar.gz";
+        def dashboard_ui_package = "${ui_project_id}/releases/${ui_project_id}-${timeStamp}.tar.gz";
+        def pys3viewer_api_package = "${api_project_id}/releases/${api_project_id}-${timeStamp}.tar.gz";
         def extras_params = "-v -e deploy_host=${deploy_env} -e remote_user=${deploy_userid} -e dashboard_ui_package=${dashboard_ui_package} -e pys3viewer_api_package=${pys3viewer_api_package}".toString();
 		def playbook_to_run = 'ansible/download_packages.yaml';
 
@@ -114,7 +114,7 @@ currentBuild.result = "SUCCESS"
         }
     }
     stage('Deploy UI'){
-        def dashboard_ui_package = "${api_project_id}/releases/${api_project_id}-${timeStamp}.tar.gz";
+        def dashboard_ui_package = "${ui_project_id}/releases/${ui_project_id}-${timeStamp}.tar.gz";
         def extras_params = "-v -e deploy_host=${deploy_env} -e remote_user=${deploy_userid} -e dashboard_ui_package=${dashboard_ui_package}".toString();
 		def playbook_to_run = 'ansible/deploy_dashboardui.yaml';
 

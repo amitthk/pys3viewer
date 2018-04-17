@@ -32,9 +32,19 @@
 - name: Unzip the package to destination
   unarchive:
     src: "{{download_location}}/{{dashboard_ui_package}}"
-    dest: "{{deploy_location}}"
+    dest: "{{deploy_location}}/"
     mode: 0755
-    remote_src: yes
+    copy: "no"
+    owner: apache
+    group: apache
+  become: true
+
+- name: Set Permissions again
+  file:
+    path: "{{deploy_location}}"
+    state: directory
+    mode: 0755
+    recurse: yes
     owner: apache
     group: apache
   become: true
