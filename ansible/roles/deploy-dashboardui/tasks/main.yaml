@@ -28,7 +28,6 @@
     owner: apache
     group: apache
   become: true
-  become_user: "{{deploy_user}}"
 
 - name: Unzip the package to destination
   unarchive:
@@ -39,14 +38,12 @@
     owner: apache
     group: apache
   become: true
-  become_user: "{{deploy_user}}"
 
 - name: Restart httpd
   service:
     name: httpd
     state: restarted
   become: true
-  become_user: "{{deploy_user}}"
 
 
 # - name: Run command
