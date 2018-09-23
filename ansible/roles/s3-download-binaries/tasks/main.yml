@@ -8,8 +8,8 @@
     file:
      path: /opt/binaries
      state: directory
-     owner: ""{{remote_user}}""
-     group: ""{{remote_user}}""
+     owner: "{{remote_user}}"
+     group: "{{remote_user}}"
      mode: 0775
      recurse: yes
     become: true
@@ -37,8 +37,8 @@
     file:
      path: /opt/binaries
      state: directory
-     owner: ""{{remote_user}}""
-     group: ""{{remote_user}}""
+     owner: "{{remote_user}}"
+     group: "{{remote_user}}"
      mode: 0775
      recurse: yes
     become: true
