@@ -1,6 +1,6 @@
 - name: create directory to store the packages
   file:
-    path: "{{download_location/item | dirname}}"
+    path: "{{(download_location+'/'+ item) | dirname}}"
     state: directory
     owner: "{{remote_user}}"
     group: "{{remote_user}}"
