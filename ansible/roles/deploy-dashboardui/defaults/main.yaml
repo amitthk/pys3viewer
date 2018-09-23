@@ -5,7 +5,7 @@ package_name: "pys3viewer"
 deploy_context_root: "pys3viewerui"
 deploy_location: "/var/www/{{project_id}}"
 backup_location: /tmp/backup/pys3viewerui/{{ansible_date_time.time}}
-deploy_user: "ec2-user"
+deploy_user: ""{{remote_user}}""
 system_environment_path: "{{lookup('env','PATH')}}"
 dashboard_ui_package: "pys3viewerui/releases/pys3viewerui-201803041707.tar.gz"
 download_location: "/tmp/packages"
